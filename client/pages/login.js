@@ -49,7 +49,7 @@ const Login = () => {
   }
 
   return (
-    <div className='container-fluid'>
+    <div className='container-fluid mt-5'>
       <div className='row py-5 bg-default-img text-light pt-5'>
         <div className='col text-center mt-5'>
           <h1 className='align-text-bottom mt-3 mb-5 pt-5 pb-3'>Login</h1>

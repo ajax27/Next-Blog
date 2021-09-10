@@ -12,7 +12,7 @@ import {
 import { UserContext } from "../../context"
 import { useRouter } from "next/router"
 
-const PostList = ({ posts }) => {
+const PostList = ({ posts, handleDelete }) => {
   const [state] = useContext(UserContext)
 
   const router = useRouter()
@@ -61,7 +61,7 @@ const PostList = ({ posts }) => {
                       className='px-4 text-info'
                     />
                     <DeleteOutlined
-                      onClick={deletePost}
+                      onClick={() => handleDelete(post)}
                       style={{ cursor: "pointer" }}
                       className='text-danger'
                     />

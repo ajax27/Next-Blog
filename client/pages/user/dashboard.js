@@ -66,9 +66,27 @@ const Dashboard = () => {
     }
   }
 
+  const handleDelete = async (post) => {
+    try {
+      const answer = window.confirm(
+        "Are you sure you want to delete this post?"
+      )
+      if (!answer) return
+      const { data } = await axios.delete(`/delete-post/${post._id}`)
+      if (data.error) {
+        toast.error(data.error)
+      } else {
+        toast.success("Post deleted successfully")
+        fetchUserPosts()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <UserRoute>
-      <div className='container-fluid'>
+      <div className='container-fluid mt-5'>
         <div className='row py-5 bg-dashboard-img text-light pt-5'>
           <div className='col text-center py-5 mt-5'>
             <h1 className='align-text-bottom mt-5 pt-5'>News Feed</h1>
@@ -86,7 +104,11 @@ const Dashboard = () => {
               image={image}
             />
             <hr />
-            <PostList className='mt-3' posts={posts} />
+            <PostList
+              className='mt-3'
+              posts={posts}
+              handleDelete={handleDelete}
+            />
           </div>
 
           <div className='col-md-4'>Sidebar</div>

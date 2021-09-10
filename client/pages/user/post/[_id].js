@@ -32,6 +32,21 @@ const EditPost = () => {
 
   const postSubmit = async (e) => {
     e.preventDefault()
+    try {
+      const { data } = await axios.put(`/update-post/${_id}`, {
+        content,
+        image,
+      })
+      if (data.error) {
+        toast.error(data.error)
+      } else {
+        toast.success("Post updated successfully")
+        router.push("/user/dashboard")
+      }
+    } catch (error) {
+      setUploading(false)
+      console.log(error)
+    }
   }
 
   const handleImage = async (e) => {

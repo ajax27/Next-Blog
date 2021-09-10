@@ -56,3 +56,27 @@ export const userPost = async (req, res) => {
     console.log(error)
   }
 }
+
+export const updatePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.params._id, req.body, {
+      new: true,
+    })
+    res.json(post)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params._id)
+    //remove image
+    if (post.image && post.image.public_id) {
+      cloudinary.uploader.destroy(post.image.public_id)
+    }
+    res.json({ ok: true })
+  } catch (error) {
+    console.log(error)
+  }
+}

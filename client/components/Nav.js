@@ -24,7 +24,7 @@ const Nav = () => {
     <nav
       style={{ backgroundColor: "#f4e800" }}
       role='navigation'
-      className='nav d-flex nav-justified'>
+      className='nav d-flex fixed-top nav-justified'>
       <Link href='/' className=''>
         <a
           className={`nav-link text-dark logo ${

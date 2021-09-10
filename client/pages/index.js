@@ -5,7 +5,7 @@ const Home = () => {
   const [state, setState] = useContext(UserContext)
 
   return (
-    <div className='container'>
+    <div className='container mt-5'>
       <div className='row'>
         <div className='col'>
           <h1 className='display-3 text-center py-5'>

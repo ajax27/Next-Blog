@@ -8,8 +8,10 @@ import {
   uploadImage,
   postsByUser,
   userPost,
+  updatePost,
+  deletePost,
 } from "../controllers/post"
-import { requireSignin } from "../middleware"
+import { requireSignin, canEditDelete } from "../middleware"
 
 router.post("/create-post", requireSignin, createPost)
 router.post(
@@ -21,5 +23,7 @@ router.post(
 // user posts
 router.get("/user-posts", requireSignin, postsByUser)
 router.get("/user-post/:_id", requireSignin, userPost)
+router.put("/update-post/:_id", requireSignin, canEditDelete, updatePost)
+router.delete("/delete-post/:_id", requireSignin, canEditDelete, deletePost)
 
 module.exports = router
