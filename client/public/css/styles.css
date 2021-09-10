@@ -1,0 +1,37 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,700;1,300&display=swap");
+
+body {
+  font-family: "Roboto Condensed", sans-serif !important;
+}
+
+.bg-default-img {
+  background-image: url("/images/default.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 170px;
+  text-shadow: 2px 2px 6px #000000;
+}
+
+.bg-dashboard-img {
+  background-image: url("/images/dashboard.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 270px;
+  text-shadow: 2px 2px 6px #000000;
+}
+
+.logo {
+  text-shadow: 1px 1px rgb(5, 5, 177);
+  font-style: italic;
+}
+
+.login-link {
+  text-decoration: none;
+}
+
+.active {
+  background-color: rgb(157, 231, 250);
+  color: #fff;
+}
