@@ -16,37 +16,34 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // console.log("Submitting", name, email, password, secret)
     try {
+      // console.log(name, email, password, secret);
       setLoading(true)
       const { data } = await axios.post(`/login`, {
         email,
         password,
       })
+
       if (data.error) {
         toast.error(data.error)
         setLoading(false)
       } else {
+        // update context
         setState({
           user: data.user,
           token: data.token,
         })
+        // save in local storage
         window.localStorage.setItem("auth", JSON.stringify(data))
-        if (state && state.token) {
-          router.push("/user/dashboard")
-          toast.success(`Welcome ${data.user.name} to your dashboard!`)
-        }
-        if (!state.token) {
-          toast.error("You are not authorized to visit that page")
-          router.push("/")
-        }
+        router.push("/user/dashboard")
       }
-    } catch (error) {
-      // console.log("Error", error)
-      toast.error(error.data)
+    } catch (err) {
+      toast.error(err.response.data)
       setLoading(false)
     }
   }
+
+  if (state && state.token) router.push("/user/dashboard")
 
   return (
     <div className='container-fluid mt-5'>

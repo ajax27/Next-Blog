@@ -1,6 +1,7 @@
 import User from "../models/user"
 import { hashPassword, comparePassword } from "../helpers/auth"
 import jwt from "jsonwebtoken"
+import { nanoid } from "nanoid"
 
 export const register = async (req, res) => {
   // console.log(req.body)
@@ -13,7 +14,13 @@ export const register = async (req, res) => {
   const userExists = await User.findOne({ email })
   if (userExists) return res.json({ error: "User already exists" })
   const hashedPassword = await hashPassword(password)
-  const user = new User({ name, email, password: hashedPassword, secret })
+  const user = new User({
+    name,
+    email,
+    password: hashedPassword,
+    secret,
+    username: nanoid(6),
+  })
   try {
     await user.save()
     // console.log("user registered")
@@ -83,5 +90,45 @@ export const forgotPassword = async (req, res) => {
   } catch (error) {
     console.log(error)
     return res.json({ error: "Error resetting password, please try again" })
+  }
+}
+
+export const profileUpdate = async (req, res) => {
+  try {
+    // console.log("profile req.body: ", req.body)
+    const data = {}
+    if (req.body.image) {
+      data.image = req.body.image
+    }
+    if (req.body.username) {
+      data.username = req.body.username
+    }
+    if (req.body.about) {
+      data.about = req.body.about
+    }
+    if (req.body.name) {
+      data.name = req.body.name
+    }
+    if (req.body.password) {
+      if (req.body.password < 6) {
+        return res.json({ error: "Password must be at least 6 characters" })
+      } else {
+        data.password = await hashPassword(req.body.password)
+      }
+    }
+    if (req.body.secret) {
+      data.secret = req.body.secret
+    }
+    let user = await User.findByIdAndUpdate(req.user._id, data, {
+      new: true,
+    })
+    user.password = undefined
+    user.secret = undefined
+    res.json(user)
+  } catch (error) {
+    if (error.code == "11000") {
+      return res.json({ error: "Username already taken" })
+    }
+    console.log(error)
   }
 }

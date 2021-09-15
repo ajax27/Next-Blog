@@ -17,14 +17,13 @@ const Nav = () => {
     window.localStorage.removeItem("auth")
     setState(null)
     router.push("/login")
-    window.location.reload()
   }
 
   return (
     <nav
       style={{ backgroundColor: "#f4e800" }}
       role='navigation'
-      className='nav d-flex fixed-top nav-justified'>
+      className='nav d-flex fixed-top justify-content-between'>
       <Link href='/' className=''>
         <a
           className={`nav-link text-dark logo ${
@@ -33,6 +32,7 @@ const Nav = () => {
           DevOlution
         </a>
       </Link>
+
       <Link href='/about'>
         <a
           className={`nav-link text-dark ${
@@ -44,22 +44,52 @@ const Nav = () => {
 
       {state !== null ? (
         <>
-          <Link href='/user/dashboard'>
-            <a
-              className={`nav-link text-dark ${
-                currentUser === "/user/dashboard" && "active"
-              }`}>
-              {state &&
-                state.user &&
-                state.user.name &&
-                `${state.user.name}'s Dashboard`}
-            </a>
-          </Link>
-          <Link href='/login'>
-            <a onClick={logout} className='nav-link text-dark'>
-              Logout
-            </a>
-          </Link>
+          <div className='dropdown'>
+            <button
+              className={`btn dropdown-toggle ${
+                currentUser === "/user/dashboard" ||
+                ("/user/profile/update" && "btn-info")
+              }`}
+              type='button'
+              id='dropdownMenuButton1'
+              data-bs-toggle='dropdown'
+              aria-expanded='false'>
+              {state && state.user && state.user.name}
+            </button>
+            <ul className='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
+              <li>
+                <Link href='/user/dashboard'>
+                  <a
+                    className={`nav-link dropdown-item nav-color text-dark ${
+                      currentUser === "/user/dashboard" && "active"
+                    }`}>
+                    Dashboard
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <hr className='dropdown-divider' />
+              </li>
+              <li>
+                <Link href='/user/profile/update'>
+                  <a
+                    className={`nav-link dropdown-item nav-color text-dark ${
+                      currentUser === "/user/profile/update" && "active"
+                    }`}>
+                    Profile
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <hr className='dropdown-divider' />
+              </li>
+              <li>
+                <a onClick={logout} className='nav-link nav-color text-dark'>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
         </>
       ) : (
         <>

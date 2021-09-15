@@ -32,6 +32,13 @@ body {
 }
 
 .active {
-  background-color: rgb(157, 231, 250);
-  color: #fff;
+  background-color: #31d2f2;
+}
+
+.nav-color {
+  background-color: #5af8d1 !important;
+}
+
+.nav-color:hover {
+  background-color: #31d2f2 !important;
 }
