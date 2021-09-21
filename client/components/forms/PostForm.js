@@ -1,5 +1,5 @@
 import { Avatar } from "antd"
-import { CameraOutlined, LoadingOutlined } from "@ant-design/icons"
+import { CameraTwoTone, LoadingOutlined } from "@ant-design/icons"
 import dynamic from "next/dynamic"
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
@@ -37,10 +37,10 @@ const PostForm = ({
           ) : uploading ? (
             <LoadingOutlined className='alert-primary mt-3' />
           ) : (
-            <CameraOutlined
+            <CameraTwoTone
+              className='alert-primary mt-3'
               title='Add Image'
               style={{ cursor: "pointer", fontSize: "1.5rem" }}
-              className='alert-warning'
             />
           )}
           <input onChange={handleImage} type='file' accept='image/*' hidden />

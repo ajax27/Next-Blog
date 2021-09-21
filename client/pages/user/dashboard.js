@@ -3,29 +3,48 @@ import UserRoute from "../../components/routes/UserRoute"
 import { UserContext } from "../../context"
 import PostForm from "../../components/forms/PostForm"
 import { useRouter } from "next/router"
+import Link from "next/link"
 import { toast } from "react-toastify"
 import axios from "axios"
 import PostList from "../../components/cards/PostList"
+import People from "../../components/cards/People"
 
 const Dashboard = () => {
-  const [state] = useContext(UserContext)
+  const [state, setState] = useContext(UserContext)
   const [content, setContent] = useState("")
   const [image, setImage] = useState({})
   const [uploading, setUploading] = useState(false)
 
   const [posts, setPosts] = useState([])
+  const [people, setPeople] = useState([])
 
   const router = useRouter()
 
   useEffect(() => {
-    if (state && state.token) fetchUserPosts()
+    const myRequest = axios.CancelToken.source()
+    if (state && state.token) {
+      fetchNewsFeed()
+      findPeople()
+    }
+    return () => {
+      myRequest.cancel()
+    }
   }, [state && state.token])
 
-  const fetchUserPosts = async () => {
+  const fetchNewsFeed = async () => {
     try {
-      const { data } = await axios.get(`/user-posts`)
+      const { data } = await axios.get(`/news-feed`)
       console.log(data)
       setPosts(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const findPeople = async () => {
+    try {
+      const { data } = await axios.get(`/find-users`)
+      setPeople(data)
     } catch (error) {
       console.log(error)
     }
@@ -38,7 +57,7 @@ const Dashboard = () => {
       if (data.error) {
         toast.error(data.error)
       } else {
-        fetchUserPosts()
+        fetchNewsFeed()
         toast.success("Post created successfully")
         setContent("")
         setImage({})
@@ -77,8 +96,52 @@ const Dashboard = () => {
         toast.error(data.error)
       } else {
         toast.success("Post deleted successfully")
-        fetchUserPosts()
+        fetchNewsFeed()
       }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleFollow = async (user) => {
+    // console.log(user)
+    try {
+      const { data } = await axios.put(`/user-follow`, { _id: user._id })
+      // console.log("Follow user: ", data)
+      // update local storage, user and keep user token
+      let auth = JSON.parse(localStorage.getItem("auth"))
+      auth.user = data
+      localStorage.setItem("auth", JSON.stringify(auth))
+      // update context
+      setState({ ...state, user: data })
+      // update user list
+      let filteredPeople = people.filter((p) => p._id !== user._id)
+      setPeople(filteredPeople)
+      // render posts in new state
+      fetchNewsFeed()
+      toast.success(`You are now following ${user.name}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleLike = async (_id) => {
+    // console.log('post liked: ', _id)
+    try {
+      const { data } = await axios.put(`/like-post`, { _id })
+      // console.log("Like post: ", data)
+      fetchNewsFeed()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleUnLike = async (_id) => {
+    // console.log('post unliked: ', _id)
+    try {
+      const { data } = await axios.put(`/unlike-post`, { _id })
+      // console.log("UnLike post: ", data)
+      fetchNewsFeed()
     } catch (error) {
       console.log(error)
     }
@@ -108,10 +171,27 @@ const Dashboard = () => {
               className='mt-3'
               posts={posts}
               handleDelete={handleDelete}
+              handleLike={handleLike}
+              handleUnLike={handleUnLike}
             />
           </div>
 
-          <div className='col-md-4'>Sidebar</div>
+          <div className='col-md-4'>
+            {state && state.user && state.user.following && (
+              <div
+                style={{ fontWeight: "600" }}
+                className='text-dark btn btn-info text-center'>
+                <Link href={`/user/following`}>
+                  <a
+                    style={{ textDecoration: "none" }}
+                    className='h5 text-white'>
+                    Following: {state.user.following.length}
+                  </a>
+                </Link>
+              </div>
+            )}
+            <People people={people} handleFollow={handleFollow} />
+          </div>
         </div>
       </div>
     </UserRoute>

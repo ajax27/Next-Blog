@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import Link from "next/link"
 import { UserContext } from "../context"
 import { useRouter } from "next/router"
+import { Avatar } from "antd"
 
 const Nav = () => {
   const [currentUser, setCurrentUser] = useState("")
@@ -17,6 +18,7 @@ const Nav = () => {
     window.localStorage.removeItem("auth")
     setState(null)
     router.push("/login")
+    setState(null)
   }
 
   return (
@@ -24,11 +26,15 @@ const Nav = () => {
       style={{ backgroundColor: "#f4e800" }}
       role='navigation'
       className='nav d-flex fixed-top justify-content-between'>
-      <Link href='/' className=''>
+      <Link href='/'>
         <a
           className={`nav-link text-dark logo ${
             currentUser === "/" && "active"
           }`}>
+          <img
+            src='/images/ajax27__logo.png'
+            style={{ width: "50px", height: "26px" }}
+          />{" "}
           DevOlution
         </a>
       </Link>
@@ -46,15 +52,17 @@ const Nav = () => {
         <>
           <div className='dropdown'>
             <button
-              className={`btn dropdown-toggle ${
-                currentUser === "/user/dashboard" ||
-                ("/user/profile/update" && "btn-info")
+              className={`btn dropdown-toggle pb-2 ${
+                (currentUser === "/user/dashboard" && "active" && "btn-info") ||
+                (currentUser === "/user/profile/update" &&
+                  "active" &&
+                  "btn-info")
               }`}
               type='button'
               id='dropdownMenuButton1'
               data-bs-toggle='dropdown'
               aria-expanded='false'>
-              {state && state.user && state.user.name}
+              {state && state.user && state.user.username}
             </button>
             <ul className='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
               <li>

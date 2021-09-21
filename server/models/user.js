@@ -34,8 +34,8 @@ const userSchema = new Schema(
       url: String,
       public_id: String,
     },
-    following: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    following: [{ type: Schema.ObjectId, ref: "User" }],
+    followers: [{ type: Schema.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 )

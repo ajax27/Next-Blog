@@ -11,8 +11,9 @@ import {
 } from "@ant-design/icons"
 import { UserContext } from "../../context"
 import { useRouter } from "next/router"
+import { imageSource } from "../../functions"
 
-const PostList = ({ posts, handleDelete }) => {
+const PostList = ({ posts, handleDelete, handleLike, handleUnLike }) => {
   const [state] = useContext(UserContext)
 
   const router = useRouter()
@@ -25,9 +26,11 @@ const PostList = ({ posts, handleDelete }) => {
         posts.map((post) => (
           <div key={post._id} className='card mb-5 mt-5'>
             <div className='card-header'>
-              <Avatar size={40} className='text-black'>
-                {post.postedBy.name[0]}
-              </Avatar>{" "}
+              <Avatar
+                src={imageSource(post.postedBy)}
+                size={40}
+                className='text-black'
+              />{" "}
               <span className='pt-2 p-lg-5'>{post.postedBy.name}</span>{" "}
               <span className='pt-2'>
                 <span className='text-info'>posted:</span>{" "}
@@ -43,11 +46,20 @@ const PostList = ({ posts, handleDelete }) => {
                 style={{ maxHeight: "300px", backgroundSize: "cover" }}
               />
               <div className='d-flex'>
-                <HeartOutlined
-                  style={{ cursor: "pointer" }}
-                  className='text-danger pt-3 px-3 h6'
-                />
-                <div className='pt-3'>3 likes</div>{" "}
+                {post.likes.includes(state.user._id) ? (
+                  <HeartFilled
+                    style={{ cursor: "pointer" }}
+                    className='text-danger pt-3 px-3 h6'
+                    onClick={() => handleUnLike(post._id)}
+                  />
+                ) : (
+                  <HeartOutlined
+                    style={{ cursor: "pointer" }}
+                    className='text-danger pt-3 px-3 h6'
+                    onClick={() => handleLike(post._id)}
+                  />
+                )}
+                <div className='pt-3'>{post.likes.length}</div>{" "}
                 <CommentOutlined
                   style={{ cursor: "pointer" }}
                   className='text-info pt-3 px-3 h6'

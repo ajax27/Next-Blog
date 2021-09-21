@@ -132,3 +132,80 @@ export const profileUpdate = async (req, res) => {
     console.log(error)
   }
 }
+
+export const findUsers = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+    let following = user.following
+    following.push(user._id)
+    const followingUsers = await User.find({ _id: { $nin: following } })
+      .select("-password -secret")
+      .limit(10)
+    res.json(followingUsers)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// middleware for following users
+export const addFollower = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.body._id, {
+      $addToSet: { followers: req.user._id },
+    })
+    next()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const userFollowers = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $addToSet: { following: req.body._id },
+      },
+      { new: true }
+    ).select("-password -secret")
+    res.json(user)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const userFollowing = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+    const following = await User.find({ _id: user.following }).limit(12)
+    res.json(following)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const removeFollower = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.body._id, {
+      $pull: { followers: req.user._id },
+    })
+    next()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const userUnfollow = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $pull: { following: req.body._id },
+      },
+      { new: true }
+    )
+    res.json(user)
+  } catch (error) {
+    console.log(error)
+  }
+}

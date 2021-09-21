@@ -34,12 +34,16 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Nav />
       <ToastContainer
+        theme='dark'
         position='top-center'
-        newestOnTop
+        newestOnTop={true}
         rtl={false}
         hideProgressBar={false}
         autoClose={3000}
+        pauseOnFocusLoss
+        draggable
         closeOnClick
+        pauseOnHover
       />
       <Component {...pageProps} />
     </UserProvider>
